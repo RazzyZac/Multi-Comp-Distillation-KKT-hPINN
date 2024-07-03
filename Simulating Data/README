@@ -1,0 +1,1 @@
+Simulating distillation column data using aspen plus V12. Radfrac column is used to seperate n-butane, n-pentane, n-hexane. Variables being changed are flow rates of each component, reflux ratio, distillate rate, number of stages, feed stage, and pressure. 
