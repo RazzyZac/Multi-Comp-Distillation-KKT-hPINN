@@ -1,4 +1,3 @@
-Solving optimization formulation using pyomo, requires the packet OMLT to add the NN into the formulation. The formulation is a MIQCP that contains bilinear constraints, so it takes time to solve, mainly depending on the number of nodes in the neural network.
-Adding more nodes increases computation time exponentially.
+Solving optimization formulation using pyomo, requires the packet OMLT to add the NN into the formulation. The formulation is a MIQCP that contains bilinear constraints, so it takes time to solve, mainly depending on the number of nodes in the neural network. Adding more nodes increases computation time exponentially.
 
-The formulation finds the global minimum of the annual operating cost by changing the flow rates of each stream (excluding the feed stream is fixed), and the column parameters reflux ratio, distillate rate, number of stages, and feed stage.
+By first specifying the composition of the products that you want, the formulation finds the global minimum of the annual operating cost by changing the flow rates of each stream (excluding the feed stream is fixed), and the column parameters reflux ratio, distillate rate, number of stages, and feed stage. 
