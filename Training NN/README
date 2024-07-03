@@ -1,2 +1,4 @@
 After generating data points with the Simulating Data code, this code then trains the neural network to provide to the formulation. The neural network being trained has the inputs: [feed flow butane,feed flow pentane,feed flow hexane,number of trays,feed tray,distillate rate,reflux ratio] and the outputs [Distillate flow butane,Distillate flow pentane,Distillate flow hexane,Investment Cost,Operating Cost].
 
+It's important that each layers activation function is ReLU because that's what allows OMLT to partition it into the formulation.
+
