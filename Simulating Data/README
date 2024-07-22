@@ -1,3 +1,3 @@
-Simulating distillation column data using aspen plus V12. Radfrac column is used to seperate n-butane, n-pentane, n-hexane. Variables being changed are flow rates of each component, reflux ratio, distillate rate, number of stages, feed stage, and pressure.
+Simulating distillation column data using aspen plus V12. Radfrac column is used to seperate n-butane, n-pentane, n-hexane. Variables being changed are flow rates of each component, reflux ratio, and distillate rate.
 
 Variable ranges are first specified in the attributes json file, input variables are then generated using sobol points, then those inputs are put into aspen to simulate. The outputs are saved into a JSON and cost analysis is then performed using those values. Operating and capital cost is found using economic models provided by YouMayCallMeJesus's repository AspenPlus-Python-Interface
