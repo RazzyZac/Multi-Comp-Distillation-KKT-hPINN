@@ -130,7 +130,7 @@ class StreamDataSimulatorAspenDIST:
             self.engine.Tree.FindNode(FLOW_B_path).Value = sample[1]*sample[3]  # Flow B
             self.engine.Tree.FindNode(FLOW_C_path).Value = sample[2]*sample[3]  #Flow C
             
-            self.engine.Tree.FindNode(dist_rate_path).Value = sample[4]*(sample[3]) #distillate rate is .25-.75 times the total flow rate
+            self.engine.Tree.FindNode(dist_rate_path).Value = sample[4]*(sample[3]) #distillate rate is .01-.99 times the total flow rate
             self.engine.Tree.FindNode(reflux_ratio_path).Value = sample[5]
             
 
