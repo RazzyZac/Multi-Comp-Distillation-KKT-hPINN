@@ -44,6 +44,12 @@ class NNOPT(nn.Module):
         self.Astar = - torch.mm(self.chunk, self.A)
         self.Bstar = torch.eye(z0_dim).to(device) - torch.mm(self.chunk, self.B)
         self.bstar = torch.matmul(self.chunk, self.b).squeeze(-1)
+        print("Astar is ")
+        print(self.Astar)
+        print("Bstar is ")
+        print(self.Bstar)
+        print('bstar is ')
+        print(self.bstar)
         self.layers = nn.ModuleList()
         self.layers.append(nn.Linear(input_dim, hidden_dim))
         for _ in range(hidden_num - 1):

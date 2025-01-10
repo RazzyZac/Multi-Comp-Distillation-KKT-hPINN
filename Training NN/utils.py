@@ -24,10 +24,10 @@ def LoadData(args):
     else:
         raise ValueError('Dataset not supported!')
 
-    dataset = Data_class(dataset_arr)
+    dataset = Data_class(dataset_arr,args.z0_dim)
     dataset.resplit_data(args.val_ratio)
 
-    A, B, b = get_scaledABb(dataset.A, dataset.B, dataset.b, scaler,args.model)
+    A, B, b = get_scaledABb(dataset.A, dataset.B, dataset.b, scaler,args.model,args.z0_dim)
     print(f'type of A: {A.dtype}, type of B: {B.dtype}, type of b: {b.dtype}')
 
     params = {'batch_size': args.batch_size,
@@ -107,21 +107,25 @@ def get_ScaleAndMean(scaler, x_dim, z_dim, model):
     else:
         xscale = []
         zscale = []
-        print('x_dim is ')
-        print(x_dim)
-        print(z_dim)
         for idx in range(x_dim):
             xscale.append(scaler.scale_[idx])
         for idx in range(z_dim):
             zscale.append((scaler.scale_[idx+x_dim]))
+        print('xscale is ')
+        print(xscale)
+        print('zscale is ')
+        print(zscale)
     return xscale, zscale
 
 
-def get_scaledABb(A, B, b, scaler,model):
+def get_scaledABb(A, B, b, scaler,model,z0_dim):
     x_dim = A.shape[1]
-    z_dim = B.shape[1]
-    xscale, zscale = get_ScaleAndMean(scaler, x_dim, z_dim,model)
+    xscale, zscale = get_ScaleAndMean(scaler, x_dim, z0_dim,model)
     xscale, zscale = torch.tensor(xscale), torch.tensor(zscale)
+    print("X scale is")
+    print(xscale)
+    print("Y scale is")
+    print(zscale)
     A_scale = torch.ones_like(A) * xscale
     B_scale = torch.ones_like(B) * zscale
     A_scaled = A * A_scale
@@ -239,20 +243,25 @@ class Data_distillation(data.Dataset):
         self.train_set, self.val_set, self.test_set = self.split_data(val_ratio, test_ratio)
         
 class Nonsharp_Dist(data.Dataset):
-    def __init__(self, dataset):
+    def __init__(self, dataset,z0_dim):
         self.dataset_tensor = torch.from_numpy(dataset).double()
-        self.X = self.dataset_tensor[:, 0:5]
-        self.Y = self.dataset_tensor[:, 5:]
+        self.X = self.dataset_tensor[:, 0:7]
+        self.Y = self.dataset_tensor[:, 7:]
         self.train_set, self.val_set, self.test_set = self.split_data(0.1,test_ratio=0.2)  # initial val_ratio -> 0.1, test_ratio 0.3
 
-        self.A = torch.tensor([[1, 0, 0, 0, 0,],
-                                [0, 1, 0, 0, 0],
-                              [0 , 0, 1, 0, 0]]).double()  
-        self.B = torch.tensor([[-1, 0, 0, -1, 0, 0, 0, 0,],
-                                [0, -1, 0, 0, -1, 0, 0, 0],
-                              [0, 0, -1, 0, 0, -1, 0, 0]]).double()  
-        self.b = torch.tensor([0, 0,0]).double()  
-
+        self.A = torch.tensor([[1, 0, 0, 0, 0, 0, 0],
+                                [0, 1, 0, 0, 0, 0, 0],
+                              [0 , 0, 1, 0, 0, 0, 0]]).double()
+        if z0_dim == 8:
+            self.B = torch.tensor([[-1, 0, 0, -1, 0, 0, 0, 0,],
+                                    [0, -1, 0, 0, -1, 0, 0, 0],
+                                  [0, 0, -1, 0, 0, -1, 0, 0]]).double()  
+            
+        else:
+            self.B = torch.tensor([[-1, 0, 0, 0, 0,],
+                                    [0, -1, 0, 0, 0],
+                                  [0, 0, -1, 0, 0]]).double()  
+        self.b = torch.tensor([0, 0,0]).double()
         self.constrained_indexes = list(set([index for index in torch.nonzero(self.B)[:, -1].tolist()]))
         self.unconstrained_indexes = [item for item in range(self.B.shape[1]) if item not in self.constrained_indexes]
 

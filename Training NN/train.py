@@ -76,8 +76,8 @@ def run_training(args, data):
                   'violation_val: {:.5f}'.format(val_violation))
     print("Finished!")
     scores = evaluate_model(data, args)
-    save_history(args, train_losses, val_losses, train_violations, val_violations)
-    file_path = 'KKThPINN_dist_simple {}.onnx'.format(args.hidden_dim)
+    #save_history(args, train_losses, val_losses, train_violations, val_violations)
+    file_path = '{}_dist {}-{}.onnx'.format(args.model,args.hidden_dim,args.epochs)
     checkpoint(model, val_loss, min_loss, args, epoch)
     _create_onnx_model(data,args,model,file_path)
     if args.job == 'experiment':
@@ -148,7 +148,7 @@ def test(model, data, args):
 def checkpoint(model, val_loss, min_loss, args, epoch):
     if np.mean(val_loss) < min_loss:
         checkpoint = {'model': model, 'state_dict': model.state_dict()}
-        torch.save(checkpoint, f'C:\\Users\\RazzyZac\\Optimization 2024 Purdue REU\\KKT_hPINN\models\\{args.model}_{args.dataset_type}_{args.val_ratio}_{args.run}.pth')
+        torch.save(checkpoint, f'C:\\Users\\Razzy\\Multi-Comp-Distillation-KKT-hPINN-main\\Training NN\\{args.model}_{args.dataset_type}_{args.val_ratio}_{args.run}.pth')
 
 
 def create_report(scores, args):
@@ -248,7 +248,7 @@ def evaluate_model(data, args):
             scores.update({'post_rmse_constrained': post_rmse_constrained})
 
     print(scores)
-    create_report(scores, args)
+    #create_report(scores, args)
 
 
 def args_to_dict(args):
@@ -264,7 +264,7 @@ def save_dict(dictionary, args):
 
 
 def load_weights(model, model_id, args):
-    PATH = f'C:\\Users\\RazzyZac\\Optimization 2024 Purdue REU\\KKT_hPINN/models/{args.model}_{args.dataset_type}_{args.val_ratio}_{args.run}.pth'
+    PATH = f'C:\\Users\\Razzy\\Multi-Comp-Distillation-KKT-hPINN-main\\Training NN\\{args.model}_{args.dataset_type}_{args.val_ratio}_{args.run}.pth'
     checkpoint = torch.load(PATH)
     model.load_state_dict(checkpoint['state_dict'])
     model.to(device)
